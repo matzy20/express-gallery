@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+html(lang="en")
+head
+  meta(charset="UTF-8")
+  title Gallery
+body
+  h1 Gallery
+  each gallery in galleries
+
+    p Author: #{gallery.author}
+
+    p Link
+      image(src='#{gallery.link}')
+    p Description: #{gallery.description}
+
