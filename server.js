@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({extended:false}));
+
 //morgan takes in a string and use dev settings
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
@@ -17,7 +18,7 @@ app.use(methodOverride('_method'));
 app.set('views', 'views');
 app.set('view engine', 'jade');
 
-//
+//returning all galleries in gallery
 app.get('/', function (req, res){
   //db.Gallery needs to match model gallery 'string' which is capitalized
   /*thought this would return more than one galleries? Yep, needed to code in seeder*/
@@ -25,7 +26,12 @@ app.get('/', function (req, res){
     //to replace res.json (used for the seeders) with res.render when creating forms
     // res.json(galleries);
     // console.log(galleries);
+    /*and since finding ALL, gallery (the model; singular), will be plural
+    (returning an array of object galleries)
+    */
     res.render('index-gallery', {
+      /*need to reference since pulling existing info/galleries in
+      vs gallery/new where info is entered*/
       'galleries': galleries
     });
   });
@@ -46,6 +52,7 @@ app.get('/gallery/:id', function (req, res){
       id is a property on a parameter*/
       id: req.params.id
     }
+  //find one gallery, so singular
   }).then(function(gallery){
     //to replace res.json (used for seeders/fakers) with res.render when creating forms
     // res.json(gallery);
@@ -57,7 +64,7 @@ app.get('/gallery/:id', function (req, res){
     });
   });
 });
-
+//edits gallery, submit brings you to new page with updates
 app.get('/gallery/:id/edit', function (req, res){
   db.Gallery.find({
     where: {
@@ -74,7 +81,21 @@ app.get('/gallery/:id/edit', function (req, res){
   });
 });
 
-//what is this doing? brings you to a form to create a new gallery
+app.get('/gallery/:id/delete', function (req, res){
+  db.Gallery.find({
+    where: {
+      id: req.params.id
+    }
+  }).then(function(gallery){
+    res.render('delete-gallery',{
+      'author': gallery.author,
+      'link': gallery.link,
+      'description': gallery.description
+    });
+  });
+});
+
+// what is this doing? brings you to a form to create a new gallery
 app.get('/views', function (req, res){
   //get data from database
   //rendering jade file
@@ -117,12 +138,27 @@ app.put('/gallery/:id', function (req, res){
       id: req.params.id
     }
   }).then(function(gallery){
-    //not render, bc that will prompt a get to be override into a put
+    //not render, bc that will prompt a 'get' to be override into a 'put'
     //look at network tab to see what type of requests being sent
     //need a redirect
     res.redirect('/gallery/' + req.params.id);
   });
 });
+
+// app.delete('/gallery/:id', function (req, res){
+//   db.Gallery.destroy({truncate:true}, {
+//     author: req.body.author,
+//     link: req.body.link,
+//     description: req.body.description
+//   }, {
+//     where: {
+//       id: req.params.id
+//     }
+//   }).then(function(gallery){
+//     res.redirect('/');
+//   });
+// });
+
 /*1. post is end point for new;
   2. which will be displayed in views/jade vs postman
   3. a form can only do one type of request
