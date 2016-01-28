@@ -88,6 +88,8 @@ app.get('/gallery/:id/delete', function (req, res){
     }
   }).then(function(gallery){
     res.render('delete-gallery',{
+      //need to include id in render since interpolating it
+      'id': gallery.id,
       'author': gallery.author,
       'link': gallery.link,
       'description': gallery.description
@@ -144,27 +146,27 @@ app.put('/gallery/:id', function (req, res){
     res.redirect('/gallery/' + req.params.id);
   });
 });
-
-// app.delete('/gallery/:id', function (req, res){
-//   db.Gallery.destroy({truncate:true}, {
-//     author: req.body.author,
-//     link: req.body.link,
-//     description: req.body.description
-//   }, {
-//     where: {
-//       id: req.params.id
-//     }
-//   }).then(function(gallery){
-//     res.redirect('/');
-//   });
-// });
+//destroy takes in one parameter
+/*don't use TRUNCATE, removes everything
+had to re-run seeders, and change loop from < 55 to > 55
+since truncate removed everything*/
+app.delete('/gallery/:id', function (req, res){
+  console.log(req.params);
+  db.Gallery.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(function(gallery){
+    res.redirect('/');
+  });
+});
 
 /*1. post is end point for new;
   2. which will be displayed in views/jade vs postman
   3. a form can only do one type of request
   4. make sure server has methodOverride and that form has query parameter for override
   5. add another get request for /gallery/:id/edit gets posted with edit-gallery.jade?
-  6. make it look pretty using sass/css
+  6. using gulpfile.js to use sass/css; gulp and nodemon running same time; task compile-sass;
 */
 
 

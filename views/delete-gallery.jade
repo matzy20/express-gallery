@@ -2,15 +2,10 @@
 html(lang="en")
 head
   meta(charset="UTF-8")
-  title Edit Gallery
+  title Delete Gallery
 body
-  block content
-    //- using method Override, to override a post action with a PUT
-    //- tricking client to think post, but do PUT
-    //- be sure to interpolate id, can't put as string, won't change
-    h1 Edit This Gallery
+  h1 Edit This Gallery
     form(method="POST" action="/gallery/#{id}?_method=PUT")
-
       p Change author from #{author}?:
       input(type="text", name="author")
 
@@ -20,8 +15,16 @@ body
       image(src='#{link}')
       p Change description from #{description}?:
       input(type="text", name="description")
-      div.actions
-        input(type="submit", value="Submit")
 
+      input(type="submit", value="Edit Gallery")
 
+  h1 Delete This Gallery
+    form(method="POST" action="/gallery/#{id}?_method=DELETE")
 
+      p Author: #{author}
+
+      p Link: #{link}
+        image(src='#{link}')
+
+      p Description: #{description}
+      input(type="submit", value="Delete Gallery")

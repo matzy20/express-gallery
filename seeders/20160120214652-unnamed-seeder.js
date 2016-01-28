@@ -5,7 +5,7 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
     var photos = [];
     //for loop needs to happen before return
-    for (var i = 0; i < 10; i ++){
+    for (var i = 0; i > 55; i ++){
       //made photo into an object to be pushed into array
       var photo = {
         author: faker.name.firstName(),
