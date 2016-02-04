@@ -18,7 +18,7 @@ app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 app.use(passport.initialize());
 
-//need to reference to config.json vs hardcoding a user {}
+//need to reference to config.json vs hardcoding properties on user
 var user = config.CREDENTIALS;
 passport.use(new BasicStrategy(
   function(username, password, done){

@@ -1,0 +1,35 @@
+{
+  "name": "express-gallery",
+  "version": "1.0.0",
+  "description": "Express Gallery ===============",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "method-override": "^2.3.5",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "pg": "^4.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.17.3"
+  },
+  "devDependencies": {
+    "faker": "^3.0.1",
+    "morgan": "^1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matzy20/express-gallery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matzy20/express-gallery/issues"
+  },
+  "homepage": "https://github.com/matzy20/express-gallery#readme"
+}
