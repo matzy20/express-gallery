@@ -4,6 +4,9 @@ var app = express();
 var path = require('path');
 var morgan = require('morgan');
 var methodOverride = require('method-override');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+var config = require('./config');
 
 //be sure to npm install body-parser
 var bodyParser = require('body-parser');
@@ -13,6 +16,17 @@ app.use(bodyParser.urlencoded({extended:false}));
 //morgan takes in a string and use dev settings
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
+app.use(passport.initialize());
+
+//need to reference to config.json vs hardcoding a user {}
+var user = config.CREDENTIALS;
+passport.use(new BasicStrategy(
+  function(username, password, done){
+    if(!(username === user.username && password === user.password)){
+      return done(null, false);
+    }
+    return done(null, user);
+  }));
 
 // app.set('views', path.resolve(_dirname, 'views'));
 app.set('views', 'views');
@@ -38,9 +52,11 @@ app.get('/', function (req, res){
 });
 //needs to be before the gallery/:id due to order
 //creates a new gallery
-app.get('/gallery/new', function (req, res){
-  res.render('new-gallery', {});
-});
+app.get('/gallery/new',
+  passport.authenticate('basic', { session: false}),
+  function (req, res){
+    res.render('new-gallery', {});
+  });
 
 //grabs gallery via seeders via faker by /gallery/id#
 app.get('/gallery/:id', function (req, res){
@@ -65,7 +81,9 @@ app.get('/gallery/:id', function (req, res){
   });
 });
 //edits gallery, submit brings you to new page with updates
-app.get('/gallery/:id/edit', function (req, res){
+app.get('/gallery/:id/edit',
+  passport.authenticate('basic', { session: false}),
+  function (req, res){
   db.Gallery.find({
     where: {
       id: req.params.id
@@ -102,13 +120,18 @@ app.get('/views', function (req, res){
   //get data from database
   //rendering jade file
   res.render('new-gallery', function (err, html){
-    console.log('wassup');
+    // console.log('wassup');
      if(err){
       res.status = 404;
       return res.send('Error Error');
      }
      res.send(html);
   });
+});
+
+app.get('/logout', function (req, res){
+  req.logout();
+  res.redirect('/');
 });
 
 //posts new gallery to
