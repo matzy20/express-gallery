@@ -5,28 +5,64 @@ var path = require('path');
 var morgan = require('morgan');
 var methodOverride = require('method-override');
 var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
+var session = require('express-session');
+var LocalStrategy = require('passport-local').Strategy;
 var config = require('./config');
 
 //be sure to npm install body-parser
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(cookieParser());
+app.use(session(config.session));
 
 //morgan takes in a string and use dev settings
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 app.use(passport.initialize());
+app.use(passport.session());
 
 //need to reference to config.json vs hardcoding properties on user
 var user = config.CREDENTIALS;
-passport.use(new BasicStrategy(
-  function(username, password, done){
-    if(!(username === user.username && password === user.password)){
+passport.use(new LocalStrategy(
+  function (username, password, done){
+    var isAuthenticated = authenticate(username, password);
+    console.log('authenticate', authenticate);
+    if(!isAuthenticated){
       return done(null, false);
     }
     return done(null, user);
   }));
+
+function authenticate (username, password){
+  var CREDENTIALS = config.CREDENTIALS;
+  var USERNAME = CREDENTIALS.username;
+  var PASSWORD = CREDENTIALS.password;
+
+  if(username === USERNAME && password === PASSWORD){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isAuthenticated (req, res, next){
+  if(!req.isAuthenticated()){
+    return res.redirect('/login');
+  }
+  return next();
+}
+//adds a hash, serializes (see resources)
+passport.serializeUser(function (user, done){
+  console.log(user);
+  done(null, user);
+});
+
+//turns the serialize back into objects
+passport.deserializeUser(function (user, done){
+  return done(null, user);
+});
 
 // app.set('views', path.resolve(_dirname, 'views'));
 app.set('views', 'views');
@@ -52,11 +88,18 @@ app.get('/', function (req, res){
 });
 //needs to be before the gallery/:id due to order
 //creates a new gallery
+//isAuthenticated making sure new gallery is a valid user
 app.get('/gallery/new',
-  passport.authenticate('basic', { session: false}),
+  isAuthenticated,
   function (req, res){
+    console.log('inside new');
     res.render('new-gallery', {});
   });
+
+//adding login form
+app.get('/login', function (req, res){
+ res.render('login');
+});
 
 //grabs gallery via seeders via faker by /gallery/id#
 app.get('/gallery/:id', function (req, res){
@@ -73,8 +116,8 @@ app.get('/gallery/:id', function (req, res){
     //to replace res.json (used for seeders/fakers) with res.render when creating forms
     // res.json(gallery);
     res.render('gallery', {
-      'id': gallery.id,
       'author': gallery.author,
+      'id': gallery.id,
       'link': gallery.link,
       'description': gallery.description
     });
@@ -82,7 +125,7 @@ app.get('/gallery/:id', function (req, res){
 });
 //edits gallery, submit brings you to new page with updates
 app.get('/gallery/:id/edit',
-  passport.authenticate('basic', { session: false}),
+  isAuthenticated,
   function (req, res){
   db.Gallery.find({
     where: {
@@ -90,7 +133,7 @@ app.get('/gallery/:id/edit',
     }
   }).then(function(gallery){
     //rendering jade file
-    res.render('edit-gallery', {
+    res.render('edit', {
       'id': gallery.id,
       'author': gallery.author,
       'link': gallery.link,
@@ -105,7 +148,7 @@ app.get('/gallery/:id/delete', function (req, res){
       id: req.params.id
     }
   }).then(function(gallery){
-    res.render('delete-gallery',{
+    res.render('edit',{
       //need to include id in render since interpolating it
       'id': gallery.id,
       'author': gallery.author,
@@ -138,17 +181,29 @@ app.get('/logout', function (req, res){
 app.post('/gallery', function (req, res){
   db.Gallery.create({
     author: req.body.author,
+    id: req.body.id,
     link: req.body.link,
     description: req.body.description
   }).then(function(gallery){
     //rendering jade file
     res.render('gallery', {
       'author': gallery.author,
+      'id': gallery.id,
       'link': gallery.link,
       'description': gallery.description
     });
   });
 });
+
+//posts for successful logins
+//localStrategy called here
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  })
+);
+
 //just need id, no need edit to match what's in browser
 app.put('/gallery/:id', function (req, res){
   console.log('not working?');
@@ -156,6 +211,7 @@ app.put('/gallery/:id', function (req, res){
   //so included a where, similar to a find
   db.Gallery.update({
     author: req.body.author,
+    id: req.body.author,
     link: req.body.link,
     description: req.body.description
   }, {

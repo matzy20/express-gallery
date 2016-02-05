@@ -2,10 +2,10 @@
 html(lang="en")
 head
   meta(charset="UTF-8")
-  title Delete Gallery
+  title Update Gallery
 body
   h1 Edit This Gallery
-    form(method="POST" action="/gallery/#{id}?_method=PUT")
+    form(action="/gallery/#{id}?_method=PUT", method="POST")
       p Change author from #{author}?:
       input(type="text", name="author")
 
@@ -16,11 +16,11 @@ body
 
       p Change description from #{description}?:
       input(type="text", name="description")
-
-      input(type="submit", value="Edit Gallery")
+      div.actions
+        input(type="submit", value="Edit Gallery")
 
   h1 Delete This Gallery
-    form(method="POST" action="/gallery/#{id}?_method=DELETE")
+    form(action="/gallery/#{id}?_method=DELETE", method="POST")
 
       p Author: #{author}
 
@@ -28,4 +28,5 @@ body
         image(src='#{link}')
 
       p Description: #{description}
-      input(type="submit", value="Delete Gallery")
+      div.actions
+        input(type="submit", value="Delete Gallery")
