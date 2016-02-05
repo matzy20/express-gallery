@@ -24,21 +24,28 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //need to reference to config.json vs hardcoding properties on user
-var user = config.CREDENTIALS;
+// var user = config.CREDENTIALS;
+//we removed credentials though on config, which is why commented out var user
 passport.use(new LocalStrategy(
   function (username, password, done){
-    var isAuthenticated = authenticate(username, password);
-    console.log('authenticate', authenticate);
-    if(!isAuthenticated){
+    //links to models database and matches to username/pword passed in
+    //now can only login using users defined in User database
+    db.User.find({
+      where:{
+        username: username,
+        password: password
+      }
+    }).then(function(user){
+    if(!user){
       return done(null, false);
     }
     return done(null, user);
-  }));
+  });
+}));
 
 function authenticate (username, password){
-  var CREDENTIALS = config.CREDENTIALS;
-  var USERNAME = CREDENTIALS.username;
-  var PASSWORD = CREDENTIALS.password;
+  var USERNAME = user.username;
+  var PASSWORD = user.password;
 
   if(username === USERNAME && password === PASSWORD){
     return true;
@@ -72,7 +79,7 @@ app.set('view engine', 'jade');
 app.get('/', function (req, res){
   //db.Gallery needs to match model gallery 'string' which is capitalized
   /*thought this would return more than one galleries? Yep, needed to code in seeder*/
-  db.Gallery.findAll({}).then(function(galleries){
+  return db.Gallery.findAll({}).then(function(galleries){
     //to replace res.json (used for the seeders) with res.render when creating forms
     // res.json(galleries);
     // console.log(galleries);
@@ -204,6 +211,15 @@ app.post('/login',
   })
 );
 
+//post users
+// app.post('/user', function (req, res){
+//   db.User.create({
+//     username: '',
+//     password: ''
+//   }).then(function(user){
+//       res.json(user);
+//     });
+// });
 //just need id, no need edit to match what's in browser
 app.put('/gallery/:id', function (req, res){
   console.log('not working?');
@@ -250,9 +266,9 @@ app.delete('/gallery/:id', function (req, res){
 
 
 //sync to database
-app.listen(3000, function() {
-  db.sequelize
-    .sync()
-    .then(function() {
+db.sequelize
+  .sync()
+  .then(function() {
+    app.listen(3000, function() {
     });
-});
+  });
