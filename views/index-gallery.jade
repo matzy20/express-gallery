@@ -7,12 +7,11 @@ head
 body
   h1 Gallery
   each gallery in galleries
+    div(class="container")
 
-    p Author: #{gallery.author}
-
-    p Id: #{gallery.id}
-
-    p Link: #{gallery.link}
+    h2 Author: #{gallery.author}
+    h2 Id: #{gallery.id}
+    h2 Link: #{gallery.link}
     image(src='#{gallery.link}')
 
     p Description: #{gallery.description}

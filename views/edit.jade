@@ -5,22 +5,22 @@ head
   title Update Gallery
 body
   h1 Edit This Gallery
-    form(action="/gallery/#{id}?_method=PUT", method="POST")
+    form(action="/gallery/#{id}?_method=PUT" method="POST")
       p Change author from #{author}?:
-      input(type="text", name="author")
+      input(type="text" name="author")
 
       p Change link from #{link}?:
-      input(type="text", name="link")
+      input(type="text" name="link")
       //-input is self closing tag so can't have anything nested, similar to image
       image(src='#{link}')
 
       p Change description from #{description}?:
-      input(type="text", name="description")
+      input(type="text" name="description")
       div.actions
-        input(type="submit", value="Edit Gallery")
+        input(type="submit" value="Edit Gallery")
 
   h1 Delete This Gallery
-    form(action="/gallery/#{id}?_method=DELETE", method="POST")
+    form(action="/gallery/#{id}?_method=DELETE" method="POST")
 
       p Author: #{author}
 
@@ -29,4 +29,4 @@ body
 
       p Description: #{description}
       div.actions
-        input(type="submit", value="Delete Gallery")
+        input(type="submit" value="Delete Gallery")

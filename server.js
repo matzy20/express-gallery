@@ -77,7 +77,7 @@ app.set('views', 'views');
 app.set('view engine', 'jade');
 
 //returning all galleries in gallery
-app.get('/gallery', function (req, res){
+app.get('/', function (req, res){
   //db.Gallery needs to match model gallery 'string' which is capitalized
   /*thought this would return more than one galleries? Yep, needed to code in seeder*/
   return db.Gallery.findAll({}).then(function(galleries){
@@ -228,7 +228,6 @@ app.put('/gallery/:id', function (req, res){
   //so included a where, similar to a find
   db.Gallery.update({
     author: req.body.author,
-    id: req.body.author,
     link: req.body.link,
     description: req.body.description
   }, {
