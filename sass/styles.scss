@@ -1,0 +1,69 @@
+// PROCESS
+// 1. Set basic variables & media query ranges
+// 2. Style large blocks with bg colors for layout
+// 3. Get general layout elements (block) sized for all media queries
+// 4. Modify general layout elements with &
+// 5. Secondary features grid (S --> L)
+// 6. Typography & Image Sizes
+// 7. Refactor the SCSS to make it dryer & simpler.
+// 8. Set variables for common values.
+
+
+// RESETS & FRAMEWORKS
+@import "partials/reset";
+
+*{
+  box-sizing: border-box;
+}
+
+// VARIABLES & MIXINS
+$primary: #655643;
+$secondary: #80BCA3;
+$tertiary: #E6AC27;
+$background: #F6F7BD;
+
+//MIXINS
+@mixin header-font($header-font-color: $primary, $header-font-size: 25px){
+font-family: 'Oswald', sans-serif;
+font-weight: normal;
+color: $header-font-color;
+font-size: $header-font-size;
+line-height: $header-font-size*1.5;
+padding-bottom: $header-font-size/2;
+
+
+  @media #{$medium}{
+    font-size: $header-font-size*2;
+    line-height: $header-font-size*3;
+  }
+  @media #{$large}{
+    font-size: $header-font-size*3;
+    line-height: $header-font-size*4;
+  }
+}
+
+// MEDIA QUERY RANGES
+$medium: "only screen and (min-width:600px)";
+$large: "only screen and (min-width:900px)";
+
+// GENERAL STYLES
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: #80dfff;
+  font-family: "Arial Black";
+}
+
+//nice to use factors vs hard set formatting
+//2 rem equals x 2
+h1 {
+  @include header-font;
+  padding-bottom: (16px/2);
+  font-size: 2rem;
+}
+
+p {
+
+}

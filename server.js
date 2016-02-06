@@ -71,12 +71,13 @@ passport.deserializeUser(function (user, done){
   return done(null, user);
 });
 
-// app.set('views', path.resolve(_dirname, 'views'));
+//use static files in public (e.g. css, assets)
+app.use(express.static(path.resolve(__dirname, 'public')));
 app.set('views', 'views');
 app.set('view engine', 'jade');
 
 //returning all galleries in gallery
-app.get('/', function (req, res){
+app.get('/gallery', function (req, res){
   //db.Gallery needs to match model gallery 'string' which is capitalized
   /*thought this would return more than one galleries? Yep, needed to code in seeder*/
   return db.Gallery.findAll({}).then(function(galleries){
