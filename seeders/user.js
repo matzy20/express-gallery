@@ -10,12 +10,18 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-        {
-          username: 'mJ',
+      {
+        username: 'mJ',
         password: 'michaelJams',
         createdAt: new Date(),
         updatedAt: new Date()
       },
+      {
+        username: 'minion',
+        password: 'dispicable',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     ], {});
   },
 
