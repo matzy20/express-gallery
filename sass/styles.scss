@@ -31,15 +31,15 @@ font-size: $header-font-size;
 line-height: $header-font-size*1.5;
 padding-bottom: $header-font-size/2;
 
+@media #{$medium}{
+  font-size: $header-font-size*2;
+  line-height: $header-font-size*3;
+}
+@media #{$large}{
+  font-size: $header-font-size*3;
+  line-height: $header-font-size*4;
+}
 
-  @media #{$medium}{
-    font-size: $header-font-size*2;
-    line-height: $header-font-size*3;
-  }
-  @media #{$large}{
-    font-size: $header-font-size*3;
-    line-height: $header-font-size*4;
-  }
 }
 
 // MEDIA QUERY RANGES
@@ -64,6 +64,39 @@ h1 {
   font-size: 2rem;
 }
 
-p {
+h2 {
+  padding-bottom: 16px;
+  font-size: 16px;
+  flex-wrap: wrap;
+}
 
+.container {
+  align-content: center;
+  display: block;
+  flex: 1 1 100%;
+}
+
+img {
+  border: 3px solid #B378D3;
+  max-width: 50%;
+}
+
+link {
+  //add underline and color css here
+}
+
+p {
+  color: black;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 100;
+
+  @media #{$medium}{
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  @media #{$large}{
+    font-size: 20px;
+    line-height: 25px;
+  }
 }
