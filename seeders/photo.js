@@ -6,7 +6,7 @@ module.exports = {
     var photos = [];
     //for loop needs to happen before return
     //i needs to be < 55, if > 55 never reaches and loop ends
-    //sequelize throwing error since didn't like passing through empty array
+    //sequelize throwing error since passing through empty array
     for (var i = 0; i < 55; i ++){
       //made photo into an object to be pushed into array
       var photo = {

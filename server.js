@@ -8,13 +8,20 @@ var passport = require('passport');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
 var config = require('./config');
+var RedisStore = require('connect-redis')(session);
 
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieParser());
-app.use(session(config.session));
+app.use(session({
+  secret: config.session.secret,
+  store: new RedisStore({
+    host: '127.0.0.1',
+    port: '6379'
+  })
+}));
 
 app.use(morgan('dev'));
 app.use(methodOverride('_method'));
@@ -25,6 +32,9 @@ app.use(passport.session());
 // var user = config.CREDENTIALS;
 //removed credentials on config, which is why commented out var user
 passport.use(new LocalStrategy(
+{
+  passReqToCallBack: true
+},
   function (username, password, done){
     //links to models database and matches to username/pword passed in
     //logging in using users defined in User database
