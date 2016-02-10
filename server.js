@@ -13,6 +13,9 @@ var RedisStore = require('connect-redis')(session);
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
+//connecting, but where are these new keys stored?
+//and where can we access them?
+//thought they'd be acceptable username and passwords to gallery/login?
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieParser());
 app.use(session({
@@ -235,7 +238,7 @@ app.delete('/gallery/:id', function (req, res){
   });
 });
 
-//Catch-all "route undefinded" handler using middleware
+// Catch-all "route undefinded" handler using middleware
 app.use(function (req, res, next){
   //400 = client error, YOU referenced wrong page
   res.status(404);
