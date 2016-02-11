@@ -13,11 +13,12 @@ var RedisStore = require('connect-redis')(session);
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
-//connecting, but where are these new keys stored?
-//and where can we access them?
-//thought they'd be acceptable username and passwords to gallery/login?
+//connecting, but where are these new keys stored? when you login
+//and where can we access them? via redis-cli 'keys *'
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieParser());
+//need session and secret b/c this creates the hash
+//gets it started to later add users to
 app.use(session({
   secret: config.session.secret,
   store: new RedisStore({
