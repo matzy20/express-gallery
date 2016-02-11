@@ -8,6 +8,7 @@ var passport = require('passport');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
 var config = require('./config');
+//updating session into now redis session
 var RedisStore = require('connect-redis')(session);
 
 var bodyParser = require('body-parser');
